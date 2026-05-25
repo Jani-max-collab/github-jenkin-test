@@ -61,7 +61,7 @@ pipeline {
 
                     REM Copy new WAR
                     scp %DIST_PATH%\\%WAR_NAME% ^
-                    %SSH_USER%@%SERVER%:%REMOTE_DEPLOY%
+                    %SSH_USER%@%SERVER%:%REMOTE_DEPLOYY%
 
                     '''
                 }
