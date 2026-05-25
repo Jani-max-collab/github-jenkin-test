@@ -43,21 +43,16 @@ pipeline {
     steps {
         bat '''
 
-        REM Create backup folder
-        "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% %USER%@%SERVER% ^
+        REM Accept host key automatically
+        "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" %USER%@%SERVER% ^
         "mkdir C:\\jenkin\\backup 2>nul"
 
-        REM Move existing WAR to backup
-        "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% %USER%@%SERVER% ^
-        "powershell -Command ^
-        if(Test-Path 'C:\\jenkin\\angularjenkin.war'){ ^
-        $d=(Get-Date).ToString('yyyyMMdd_HHmmss'); ^
-        Move-Item 'C:\\jenkin\\angularjenkin.war' ^
-        ('C:\\jenkin\\backup\\angularjenkin_'+$d+'.war') ^
-        }"
+        REM Backup old WAR using plain CMD
+        "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" %USER%@%SERVER% ^
+        "if exist C:\\jenkin\\angularjenkin.war move C:\\jenkin\\angularjenkin.war C:\\jenkin\\backup\\angularjenkin_%RANDOM%.war"
 
         REM Upload new WAR
-        "C:\\Program Files\\PuTTY\\pscp.exe" -batch -pw %PASS% ^
+        "C:\\Program Files\\PuTTY\\pscp.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" ^
         dist\\github-jenkin-test\\browser\\angularjenkin.war ^
         %USER%@%SERVER%:C:/jenkin/
 
