@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         SERVER = "192.168.1.200"
-        USER = "administrator"
-        PASS = '$uravel@23'
+        USER = "---"
+        PASS = '---'
 
         DIST_PATH = "dist\\github-jenkin-test\\browser"
         WAR_NAME = "angularjenkin.war"
