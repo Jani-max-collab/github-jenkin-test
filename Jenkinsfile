@@ -9,12 +9,15 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm install'
+            }
+        }
+
         stage('Build Angular') {
             steps {
-                bat '''
-                npm install
-                npx ng build
-                '''
+                bat 'npx ng build'
             }
         }
 
