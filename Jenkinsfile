@@ -43,18 +43,20 @@ pipeline {
     steps {
         bat '''
 
-        REM Create backup folder if not exists
+        REM Create backup folder
         "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% %USER%@%SERVER% ^
-        "if not exist C:\\jenkin\\backup mkdir C:\\jenkin\\backup"
+        "mkdir C:\\jenkin\\backup 2>nul"
 
-        REM Move old WAR to backup with timestamp
+        REM Move existing WAR to backup
         "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% %USER%@%SERVER% ^
-        "if exist C:\\jenkin\\angularjenkin.war powershell -command ^
-        \"$ts=Get-Date -Format 'yyyyMMdd_HHmmss'; ^
+        "powershell -Command ^
+        if(Test-Path 'C:\\jenkin\\angularjenkin.war'){ ^
+        $d=(Get-Date).ToString('yyyyMMdd_HHmmss'); ^
         Move-Item 'C:\\jenkin\\angularjenkin.war' ^
-        'C:\\jenkin\\backup\\angularjenkin_'+$ts+'.war'\""
+        ('C:\\jenkin\\backup\\angularjenkin_'+$d+'.war') ^
+        }"
 
-        REM Copy new WAR
+        REM Upload new WAR
         "C:\\Program Files\\PuTTY\\pscp.exe" -batch -pw %PASS% ^
         dist\\github-jenkin-test\\browser\\angularjenkin.war ^
         %USER%@%SERVER%:C:/jenkin/
