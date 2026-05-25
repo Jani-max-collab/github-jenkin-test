@@ -47,9 +47,9 @@ pipeline {
         "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" %USER%@%SERVER% ^
         "mkdir C:\\jenkin\\backup 2>nul"
 
-        REM Backup old WAR using plain CMD
-        "C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" %USER%@%SERVER% ^
-        "if exist C:\\jenkin\\angularjenkin.war move C:\\jenkin\\angularjenkin.war C:\\jenkin\\backup\\angularjenkin_%RANDOM%.war"
+        REM Backup old WAR
+"C:\\Program Files\\PuTTY\\plink.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" %USER%@%SERVER% ^
+"powershell -ExecutionPolicy Bypass -Command ""$d=Get-Date -Format 'yyyyMMdd_HHmmss'; if(Test-Path 'C:\\jenkin\\angularjenkin.war'){ Move-Item 'C:\\jenkin\\angularjenkin.war' ('C:\\jenkin\\backup\\angularjenkin_'+$d+'.war') }"""
 
         REM Upload new WAR
         "C:\\Program Files\\PuTTY\\pscp.exe" -batch -pw %PASS% -hostkey "ssh-ed25519 255 SHA256:woK2kE6RthRGPKrjpt89/7mezMLugrHf4baqv425cLY" ^
